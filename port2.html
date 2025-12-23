@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmad Muldi</title>
+    <link rel="shortcut icon" href="https://files.catbox.moe/rew5l0.jpg" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+        /* Custom CSS for animations and effects */
+        .typing-text {
+            display: inline-block;
+            position: relative;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.9;
+        }
+        
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: -1;
+        }
+        
+        
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0c29, #302b63);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+            overflow: hidden;
+        }
+
+        .cyber-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+        }
+
+        .grid-line {
+            position: absolute;
+            background: linear-gradient(to right, transparent, #00f2ff, transparent);
+            height: 1px;
+            width: 100%;
+            animation: gridScan 8s linear infinite;
+        }
+
+        .grid-line:nth-child(1) { top: 20%; animation-delay: 0s; }
+        .grid-line:nth-child(2) { top: 40%; animation-delay: -2s; }
+        .grid-line:nth-child(3) { top: 60%; animation-delay: -4s; }
+        .grid-line:nth-child(4) { top: 80%; animation-delay: -6s; }
+
+        .hologram-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hologram-sphere {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #00f2ff, transparent 70%);
+            box-shadow: 0 0 30px #00f2ff;
+            animation: pulse 3s ease-in-out infinite alternate;
+            filter: blur(1px);
+        }
+
+        .hologram-core {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #00f2ff;
+            box-shadow: 0 0 20px #00f2ff;
+            animation: corePulse 1.5s ease-in-out infinite alternate;
+        }
+
+        .hologram-ring {
+            position: absolute;
+            border: 2px solid #00f2ff;
+            border-radius: 50%;
+            animation: ringExpand 4s linear infinite;
+            box-shadow: 0 0 10px #00f2ff;
+        }
+
+        .hologram-ring:nth-child(3) { width: 160px; height: 160px; animation-delay: 0s; }
+        .hologram-ring:nth-child(4) { width: 200px; height: 200px; animation-delay: -1s; }
+        .hologram-ring:nth-child(5) { width: 240px; height: 240px; animation-delay: -2s; }
+
+        .loading-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #00f2ff;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .cyber-text {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00f2ff;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(0, 242, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #00f2ff, #00f2ff);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .status-text {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            animation: statusFade 3s ease-in-out infinite;
+        }
+
+        @keyframes gridScan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes corePulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        @keyframes ringExpand {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px #00f2ff; }
+            100% { text-shadow: 0 0 15px #00f2ff; }
+        }
+
+        @keyframes statusFade {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes progress {
+            to { width: 100%; }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .music-player {
+            transition: all 0.3s ease;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+        
+        .music-player:hover {
+            transform: scale(1.02);
+        }
+        
+        .link-button {
+            transition: all 0.3s ease;
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+        }
+        
+        .link-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+        
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center text-white overflow-x-hidden">
+    <!-- Futuristic Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="cyber-grid">
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+            <div class="grid-line"></div>
+        </div>
+        <div class="hologram-container">
+            <div class="hologram-sphere"></div>
+            <div class="hologram-core"></div>
+            <div class="hologram-ring"></div>
+            <div class="hologram-ring"></div>
+            <div class="hologram-ring"></div>
+        </div>
+        <div class="loading-text">
+            <span class="cyber-text">SELAMAT DATANG</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="cyberProgress"></div>
+            </div>
+            <div class="status-text">▒▒▒▒▒▒▒▒▒▒10%</div>
+        </div>
+    </div>
+
+    <!-- Background Video with Overlay -->
+    <div class="video-overlay"></div>
+    <video autoplay muted loop class="video-background">
+        <source src="https://files.catbox.moe/ze5z5k.mp4" type="video/mp4">
+    </video>
+
+    <!-- Main Content -->
+    <div class="w-full max-w-md mx-auto p-6 my-8">
+        <!-- Profile Section -->
+        <div class="flex flex-col items-center mb-8">
+            <div class="relative w-32 h-32 mb-4" style="backface-visibility: hidden; transform-style: preserve-3d;">
+                <img src="https://files.catbox.moe/fia110.jpg" 
+                     alt="Profile Photo" 
+                     class="w-full h-full rounded-full object-cover border-4 border-white border-opacity-30">
+            </div>
+            
+            <h1 class="text-3xl font-bold mb-2">Madz Muldi</h1>
+            <div class="text-xl mb-4 text-center h-8">
+                <span id="animatedBio" class="typing-text"></span>
+            </div>
+            
+        </div>
+        
+        <!-- Music Player -->
+        <div class="music-player bg-black bg-opacity-40 backdrop-blur-md rounded-xl p-4 mb-4 transition-all duration-300">
+            <div class="flex items-center mb-3">
+                <div class="relative w-16 h-16 rounded-full overflow-hidden mr-3" id="albumCover" style="backface-visibility: hidden; transform-style: preserve-3d;">
+                    <img src="https://c.termai.cc/i68/9jh" 
+                         alt="Album Cover" 
+                         class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold">Bergema sampai selamanya</h3>
+                    <p class="text-sm text-gray-300">Nadhif basalamah</p>
+                </div>
+                <button id="playBtn" class="bg-white bg-opacity-20 rounded-full w-10 h-10 flex items-center justify-center border border-white border-opacity-30">
+                    <i class="fas fa-play text-white"></i>
+                </button>
+            </div>
+            <audio id="audioPlayer" loop>
+                <source src="https://files.catbox.moe/yii392.mp3" type="audio/mpeg">
+            </audio>
+            <div class="flex items-center mt-2">
+                <span class="text-xs text-gray-300 mr-2" id="currentTime">0:00</span>
+                <div class="flex-1 h-1 bg-white bg-opacity-20 rounded-full overflow-hidden border border-white border-opacity-10">
+                    <div class="h-full bg-white rounded-full" id="progressBar" style="width: 0%"></div>
+                </div>
+                <span class="text-xs text-gray-300 ml-2" id="duration">3:30</span>
+            </div>
+        </div>
+
+        <!-- Contact Text -->
+        <div class="text-center mb-6" style="text-shadow: 0 0 8px rgba(0,255,255,0.5);">
+            <h2 class="text-xl font-bold" style="color: rgb(0, 255, 255);">Follow Me</h2>
+            <p class="text-sm" style="color: rgb(0, 200, 255);">on social media</p>
+        </div>
+        
+        <!-- Links -->
+        <div class="space-y-4">
+            <a href="https://instagram.com/madzmuldi_" class="link-button flex items-center justify-center gap-3 bg-white bg-opacity-10 backdrop-blur-md border border-white border-opacity-30 text-white text-center py-3 px-6 rounded-xl font-medium hover:bg-opacity-20 transition-all duration-300">
+                <i class="fab fa-instagram text-xl"></i> INSTAGRAM
+            </a>
+            <a href="https://www.facebook.com/share/12Jn48xurYq/" class="link-button flex items-center justify-center gap-3 bg-white bg-opacity-10 backdrop-blur-md border border-white border-opacity-30 text-white text-center py-3 px-6 rounded-xl font-medium hover:bg-opacity-20 transition-all duration-300">
+                <i class="fab fa-facebook text-xl"></i> FACEBOOK
+            </a>
+            <a href="https://t.me/madz1805" class="link-button flex items-center justify-center gap-3 bg-white bg-opacity-10 backdrop-blur-md border border-white border-opacity-30 text-white text-center py-3 px-6 rounded-xl font-medium hover:bg-opacity-20 transition-all duration-300">
+                <i class="fab fa-telegram text-xl"></i> TELEGRAM
+            </a>
+            <a href="https://wa.me/15752814187" class="link-button flex items-center justify-center gap-3 bg-white bg-opacity-10 backdrop-blur-sm border border-white border-opacity-20 text-white text-center py-3 px-6 rounded-xl font-medium hover:bg-opacity-20 transition-all">
+                <i class="fab fa-whatsapp text-xl"></i> WHATSAPP (USA) 🇺🇸
+            </a>
+            <a href="https://wa.me/6283138283170" class="link-button flex items-center justify-center gap-3 bg-white bg-opacity-10 backdrop-blur-sm border border-white border-opacity-20 text-white text-center py-3 px-6 rounded-xl font-medium hover:bg-opacity-20 transition-all">
+                <i class="fab fa-whatsapp text-xl"></i> KAYNA AI 
+            </a>
+            <a href="mailto:ahmadmuldi1805@gmail.com" class="link-button flex items-center justify-center gap-3 bg-white bg-opacity-10 backdrop-blur-sm border border-white border-opacity-20 text-white text-center py-3 px-6 rounded-xl font-medium hover:bg-opacity-20 transition-all">
+                <i class="fas fa-envelope text-xl"></i> EMAIL
+            </a>
+        </div>
+
+        <!-- Social Media Icons -->
+        <div class="flex justify-center space-x-4 mt-6">
+            <a href="https://x.com/Madz__18?t=OD-hJzTqCtwwcNNoZkxHyg&s=09" class="text-white hover:text-blue-500 transition"><i class="fab fa-twitter fa-lg"></i></a>
+            <a href="https://www.tiktok.com/@just.dreamer18?_t=ZS-8yElLArYXNo&_r=1" class="text-white hover:text-red-500 transition"><i class="fab fa-tiktok fa-lg"></i></a>
+            <a href="https://github.com/madz405" class="text-white hover:text-gray-800 transition"><i class="fab fa-github fa-lg"></i></a>
+        </div>
+
+        <!-- Date & Time Display -->
+        <div class="text-center text-white text-opacity-70 text-sm mt-4" id="datetime">
+            Loading time...
+        </div>
+    </div>
+    
+    <!-- Watermark -->
+    <div class="text-center text-white text-opacity-50 text-sm mt-8 mb-4">
+        © 2025 madz. all right reserved
+    </div>
+
+    <script>
+        // Bio typing animation
+        const bioTexts = [
+            "Baik hati, ramah 😇",
+            "Tidak sombong 🤗", 
+            "Cat lovers 🐱",
+            "Astrophile 🌌",
+            "Handsome 😎 (mother said 🗿)"
+        ];
+        let bioIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        
+        function typeBio() {
+            const currentText = bioTexts[bioIndex];
+            const animatedBio = document.getElementById('animatedBio');
+            
+            if (isDeleting) {
+                animatedBio.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+                
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    bioIndex = (bioIndex + 1) % bioTexts.length;
+                    setTimeout(typeBio, 1000);
+                } else {
+                    setTimeout(typeBio, 100);
+                }
+            } else {
+                animatedBio.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+                
+                if (charIndex === currentText.length) {
+                    isDeleting = true;
+                    setTimeout(typeBio, 2000);
+                } else {
+                    setTimeout(typeBio, 150);
+                }
+            }
+        }
+        
+        // Start typing animation after loading
+        window.addEventListener('load', function() {
+            setTimeout(typeBio, 3500);
+        });
+
+        // Futuristic loading animation
+        window.addEventListener('load', function() {
+            const progressBar = document.getElementById('cyberProgress');
+            const statusText = document.querySelector('.status-text');
+            const statusMessages = [
+                "████▒▒▒▒▒▒30%",
+                "█████▒▒▒▒▒50%",
+                "████████▒▒80%",
+                "██████████100%"
+            ];
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    statusText.textContent = statusMessages[3];
+                    
+                    setTimeout(() => {
+                        document.getElementById('loadingScreen').style.opacity = '0';
+                        setTimeout(() => {
+                            document.getElementById('loadingScreen').style.display = 'none';
+                        }, 1000);
+                    }, 500);
+                } else if (progress >= 75) {
+                    statusText.textContent = statusMessages[2];
+                } else if (progress >= 50) {
+                    statusText.textContent = statusMessages[1];
+                } else if (progress >= 25) {
+                    statusText.textContent = statusMessages[0];
+                }
+                
+                progressBar.style.width = `${progress}%`;
+            }, 100);
+        });
+
+        // Real-time date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            document.getElementById('datetime').textContent = now.toLocaleDateString('id-ID', options);
+        }
+        
+        // Update time every second
+        setInterval(updateDateTime, 1000);
+        updateDateTime(); // Initial call
+
+        // Music player functionality
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const progressBar = document.getElementById('progressBar');
+        const currentTimeElement = document.getElementById('currentTime');
+        const durationElement = document.getElementById('duration');
+        
+        // Set initial duration (fake for demo)
+        durationElement.textContent = '3:30';
+        
+        const albumCover = document.getElementById('albumCover');
+        
+        playBtn.addEventListener('click', function() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                albumCover.style.animation = 'spin 5s linear infinite';
+            } else {
+                audioPlayer.pause();
+                playBtn.innerHTML = '<i class="fas fa-play text-white"></i>';
+                albumCover.style.animation = 'none';
+            }
+        });
+        
+        audioPlayer.addEventListener('timeupdate', function() {
+            // Update progress bar
+            const currentTime = audioPlayer.currentTime;
+            const duration = audioPlayer.duration;
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            
+            // Update time display
+            const currentMinutes = Math.floor(currentTime / 60);
+            const currentSeconds = Math.floor(currentTime % 60).toString().padStart(2, '0');
+            currentTimeElement.textContent = `${currentMinutes}:${currentSeconds}`;
+        });
+        
+        progressBar.parentElement.addEventListener('click', function(e) {
+            const progressBarWidth = this.clientWidth;
+            const clickedPosition = e.offsetX;
+            const duration = audioPlayer.duration;
+            audioPlayer.currentTime = (clickedPosition / progressBarWidth) * duration;
+        });
+        
+        audioPlayer.addEventListener('ended', function() {
+            playBtn.innerHTML = '<i class="fas fa-play text-white"></i>';
+            progressBar.style.width = '0%';
+            currentTimeElement.textContent = '0:00';
+        });
+    </script>
+</body>
+</html>
